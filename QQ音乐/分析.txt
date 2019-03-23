@@ -1,0 +1,23 @@
+QQ音乐免费下载破解流程
+歌曲https://y.qq.com/n/yqq/song/003syiJd11Gg3C.html
+1.点开音乐界面播放，发现Media文件，URL地址为
+http://220.181.91.148/amobile.music.tc.qq.com/C400003syiJd11Gg3C.m4a?guid=5897241861&vkey=B63268716AFBE673EE891C66A62ECE80F7EC4EB845DB5E6AD838C0FA8D6190063335414D0EDE198EBE19427245757CE47F4D34D13E2D37A4&uin=0&fromtag=66
+参数：
+guid: 5897241861
+vkey: B63268716AFBE673EE891C66A62ECE80F7EC4EB845DB5E6AD838C0FA8D6190063335414D0EDE198EBE19427245757CE47F4D34D13E2D37A4
+uin: 0
+fromtag: 66
+其中的uin为QQ号，可以为0
+formtag正在播放其他音乐的时候也是66，所也可以保留不变
+主要是获取guid和vkey
+URL中的C400003syiJd11Gg3C为歌曲URL中的参数
+
+2.解析
+发现URL
+https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey09225807829847654&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%225897241861%22%2C%22songmid%22%3A%5B%22001npXAe453Lq1%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22format%22%3A%22json%22%2C%22ct%22%3A24%2C%22cv%22%3A0%7D%7D
+"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"5897241861","songmid":["001npXAe453Lq1"],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":24,"cv":0}}
+得到guid和vkey
+filename:"C400003syiJd11Gg3C.m4a"
+purl:"C400003syiJd11Gg3C.m4a?guid=5897241861&vkey=9F945BE1B15A4F44DD3D0E85E85EFCC8304FC90DDB7BDF24668022A56A09D26AE2F3C99CC8B93ED85856B43CBDD26EF40C838381DDDE274F&uin=0&fromtag=66"
+songmid:003syiJd11Gg3C"
+vkey:9F945BE1B15A4F44DD3D0E85E85EFCC8304FC90DDB7BDF24668022A56A09D26AE2F3C99CC8B93ED85856B43CBDD26EF40C838381DDDE274F"
