@@ -13,4 +13,4 @@ IDE：Pycharm    Python版本: 3.6
 
 ### 二：BeautifulSoup 爬虫
 
-* JD https://www.jd.com/（本来是弄淘宝的，淘宝需要登录，懒得弄了）
+* JD（本来是弄淘宝的，淘宝需要登录，懒得弄了） https://www.jd.com/
