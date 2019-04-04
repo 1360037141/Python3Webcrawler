@@ -1,0 +1,198 @@
+登录
+登录的时候会有选图片验证码
+其实这个选图片验证码是一个坐标系，每一张图片对应一个大致的范围而已
+先准备好账号密码（正确的），之后故意点错图片
+一张一张试出来
+1——40,40
+2——114.35
+3——192,39
+4——257,36
+5——42,115
+6——119,107
+7——185,124
+8——272,117
+图片返回后的是base64加密的，先解密再下载
+
+接下来继续查看，发现在浏览器里找不到post请求，那么就应该是用了ajax请求了
+查看js，果然，按这个顺序慢慢破解就可以了
+var popup_browser = navigator.appName
+var popup_b_version = navigator.appVersion
+var popup_version = popup_b_version.split(';');
+var popup_trin_version_flag = popup_version && popup_version.length > 1;
+var popup_trim_Version = popup_trin_version_flag ? popup_version[1].replace(/[ ]/g, '') : '';
+var popup_uam_dataType = 'json';
+var popup_uam_type = 'POST';
+if (popup_browser == 'Microsoft Internet Explorer' && popup_trim_Version == 'MSIE7.0') {
+  popup_uam_dataType = 'jsonp';
+  popup_uam_type = 'GET';
+} else if(popup_browser == 'Microsoft Internet Explorer' && popup_trim_Version == 'MSIE8.0') {
+  popup_uam_dataType = 'jsonp';
+  popup_uam_type = 'GET';
+} else if(popup_browser == 'Microsoft Internet Explorer' && popup_trim_Version == 'MSIE9.0') {
+  popup_uam_dataType = 'jsonp';
+  popup_uam_type = 'GET';
+}
+
+// 统一认证登录
+var popup_passport_appId = 'otn';
+var popup_passport_baseUrl = 'https://kyfw.12306.cn/passport/';
+var popup_passport_apptk_static = popup_passport_baseUrl + 'web/auth/uamtk-static'
+var popup_passport_login =  popup_passport_baseUrl + 'web/login';
+var popup_passport_captcha = popup_passport_baseUrl + 'captcha/captcha-image64?login_site=E&module=login&rand=sjrand&';
+var popup_passport_captcha_check = popup_passport_baseUrl + 'captcha/captcha-check';
+var popup_passport_uamtk = popup_passport_baseUrl + 'web/auth/uamtk';
+
+var popup_is_uam_login = 'Y'; // 是否统一认证登录
+var popup_is_login_passCode = 'Y' // 是否启用验证码校验登录（仅本地登录）
+var popup_is_sweep_login = 'Y' // 统一认证登录情况下是否开启扫码登录
+var popup_is_login = 'N' // 是否已登录
+
+ var popup_baseUrl = 'https://kyfw.12306.cn';
+var popup_publicName = '/otn'; //预发布环境
+
+var base_uamauthclient_url = popup_baseUrl + popup_publicName + '/uamauthclient';
+
+var popup_loginCallBack = function() {
+    if(!$.popup_isPop){
+    	window.location.href = popup_baseUrl + popup_publicName + '/login/userLogin'
+    }else{
+    	//弹框登录回调
+    	if("Y" == popup_is_uam_login){
+    		//到认证中心认证去
+			$.ajax({
+				type : "POST",
+				url : popup_passport_uamtk,
+				async: false,
+				data : {
+					appid : popup_passport_appId
+				},
+				dataType : "jsonp",
+				jsonp : "callback",
+				success : function(data) {
+					if (data.result_code == 0) {
+						var apptk = data.newapptk || data.apptk;
+						//将TK种到自己的Cookies中
+						$.ajax({
+							type : "POST",
+							async: false,
+							url : base_uamauthclient_url,
+							data : {
+								tk : apptk
+							},
+							datatype : "json",
+							success : function(data) {
+								if (data.result_code == 0) {
+									$('.mask').fadeOut();
+									$(".modal-login").hide();
+									if($.pop_secretStr && $.pop_start_time){
+										$.todo_submitOrderRe($.pop_secretStr, $.pop_start_time);
+									}
+								}
+							},
+							error : function() {}
+						});
+					}
+				},
+				error : function() {}
+			});
+    	}else{
+    		$('.mask').fadeOut();
+			$(".modal-login").hide();
+			if($.pop_secretStr && $.pop_start_time){
+				$.todo_submitOrderRe($.pop_secretStr, $.pop_start_time);
+			}
+    	}
+    }
+}
+// 初始读取conf，已登录状态，重定向
+var popup_loginedCallBack = function () {
+    if(!$.popup_isPop){
+    	window.location.href = popup_baseUrl + popup_publicName + '/view/index.html'
+    }
+}
+var popup_qr_appId = 'otn'
+var popup_url = {
+    'loginConf': popup_baseUrl + popup_publicName + '/login/conf',
+    // 本地登录
+    'getPassCodeNew': popup_baseUrl + popup_publicName + '/passcodeNew/getPassCodeNew?module=login&rand=sjrand&',
+    'checkRandCodeAnsyn': popup_baseUrl + popup_publicName + '/passcodeNew/checkRandCodeAnsyn',
+    'login': popup_baseUrl + popup_publicName + '/login/loginAysnSuggest',
+    'getBanners': popup_baseUrl + popup_publicName + '/index12306/getLoginBanner',
+    // 扫码登录
+    'qr': popup_baseUrl + '/passport/web/create-qr',
+    'qr64': popup_baseUrl + '/passport/web/create-qr64',
+    'checkqr': popup_baseUrl + '/passport/web/checkqr'
+}
+
+//验证码顶部高度
+var popup_defaultPasscodeHeight = 30;
+var popup_ifSuccessCode = false;
+
+var popup_passCodeImg = $('#J-loginImg'); // 验证码图片
+
+var popup_ispopup_CreateQr = false;
+var popup_t = null, popup_s = '-1';
+// var popup_slideIsLoad = true;
+
+var popup_isPopupLogin = true;
+
+var forie = 'forie.html'
+
+jQuery.extend({
+	pop_secretStr : "",
+	pop_start_time : "",
+	popup_isPop : true,
+    popup_show_login_error: function(msg) {
+        if('验证码错误！' != msg && '请选择验证码！' != msg ) {
+            $('#J-password').val('');
+        }
+	if(msg && msg.indexOf('重新设置密码')>-1){
+        	msg=msg.substring(0,msg.indexOf('重新设置密码')) +
+        	'<a href="' + popup_baseUrl + popup_publicName + '/forgetPassword/initforgetMyPassword" style="color:#3B99FC">' +
+        	'重新设置密码' +
+        	'</a>' + msg.substring(msg.indexOf('重新设置密码') + 6);
+        }
+        $('#J-login-error').show().find('span').html(msg);
+    },
+    popup_hide_login_error: function() {
+        $('#J-login-error').hide().find('span').html('');
+    },
+    // 统一认证登录
+    popup_loginForUam: function() {
+        var randCode = '';
+        var obj = $('#J-passCodeCoin div');
+
+        for(var i = 0; i < obj.length; i++) {
+            randCode += $(obj[i]).attr('randcode') + ',';
+        }
+        randCode = randCode.substring(0, randCode.length-1);
+
+        $.ajax({
+            crossDomain: true,
+            url: popup_passport_login,
+            data: {
+                'username': $('#J-userName').val(),
+                'password': $('#J-password').val(),
+                'appid': popup_passport_appId,
+                'answer': randCode
+            },
+            dataType: popup_uam_dataType,
+            type: popup_uam_type,
+            timeout: 10000,
+            xhrFields: { withCredentials : true },
+            success: function(data) {
+                if(data.result_code == 0) {
+                    $.popup_hideCommonLogin();
+                    // 成功回调
+                    popup_loginCallBack()
+                }else {
+                    $.popup_show_login_error(data.result_message)
+                    $.popup_createPassCode()
+                    $('#J-passCodeCoin').html('');
+                }
+            },
+            error: function() {
+                $.popup_hideCommonLogin();
+            }
+        });
+    },
