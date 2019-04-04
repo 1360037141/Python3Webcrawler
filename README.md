@@ -13,7 +13,7 @@ IDE：Pycharm    Python版本: 3.6
 
 * 12306 https://kyfw.12306.cn
 
-* googl https://translate.google.cn/（顺便做了个QT）
+* google https://translate.google.cn/（顺便做了个QT）
 
 ### 二：BeautifulSoup 爬虫
 
