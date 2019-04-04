@@ -11,6 +11,8 @@ IDE：Pycharm    Python版本: 3.6
 
 * QQ音乐 http://y.qq.com/
 
+* 12306 https://kyfw.12306.cn
+
 ### 二：BeautifulSoup 爬虫
 
 * JD（本来是弄淘宝的，淘宝需要登录，懒得弄了） https://www.jd.com/
