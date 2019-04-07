@@ -18,3 +18,7 @@ IDE：Pycharm    Python版本: 3.6
 ### 二：BeautifulSoup 爬虫
 
 * JD https://www.jd.com/
+
+### 三：selenium 爬虫
+
+* B站 https://www.bilibili.com
