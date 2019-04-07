@@ -54,8 +54,13 @@ def getGapOffset(image, source_img, thresh=150):
 	for i in range(60, image.size[0]):
 		for j in range(image.size[1]):
 			#获取RGB的值
-			pixel1 = image.getpixel((i, j))
-			pixel2 = source_img.getpixel((i, j))
+			#方法一
+			# pixel1 = image.getpixel((i, j))
+			# pixel2 = source_img.getpixel((i, j))
+			#方法二
+			pixel1=image.load()[i,j]
+			pixel2=source_img.load()[i,j]
+			#对比RGB
 			if abs(pixel1[0]-pixel2[0]) + abs(pixel1[1]-pixel2[1]) + abs(pixel1[2]-pixel2[2]) >= thresh:
 				return i
 
@@ -110,6 +115,7 @@ def main(url):
 	distance = getGapOffset(gap_image, full_image)
 	# 获取轨迹
 	tracks = Tracks.getTracks(int(distance*0.95), 12, 3)
+	print(tracks)
 	# 模拟滑动
 	moveToGap(browser, slider, tracks)
 	time.sleep(2)
