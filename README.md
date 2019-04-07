@@ -13,6 +13,8 @@ IDE：Pycharm    Python版本: 3.6
 
 * 12306 https://kyfw.12306.cn
 
+* google https://translate.google.cn/（做了个QT）
+
 ### 二：BeautifulSoup 爬虫
 
-* JD（本来是弄淘宝的，淘宝需要登录，懒得弄了） https://www.jd.com/
+* JD https://www.jd.com/
